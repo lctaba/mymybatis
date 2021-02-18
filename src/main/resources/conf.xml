@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <settings>
+        <setting name="firstLevelCacheEnabled" value="true"/>
+        <setting name="secondLevelCacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="multipleResultSetEnabled" value="true"/>
+        <setting name="executorType" value="Default"/>
+        <setting name="timeout" value="2000"/>
+        <setting name="logType" value="Log4j"/>
+    </settings>
+
+    <environments default="cyh">
+        <environment id="cyh">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}" />
+                <property name="url" value="${jdbc.url}" />
+                <property name="username" value="${jdbc.username}" />
+                <property name="password" value="${jdbc.password}" />
+            </dataSource>
+        </environment>
+    </environments>
+
+
+    <mappers>
+
+    </mappers>
+
+</configuration>
