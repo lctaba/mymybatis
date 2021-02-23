@@ -6,9 +6,9 @@ import com.cyh.mymybatis.ibatis.datasource.UnpooledDataSource;
 import com.cyh.mymybatis.ibatis.executor.ExecutorType;
 import com.cyh.mymybatis.ibatis.mapper.MappedStatement;
 import com.cyh.mymybatis.ibatis.mapper.MapperRegistry;
-import com.cyh.mymybatis.transaction.JDBCTransactionFactory;
-import com.cyh.mymybatis.transaction.ManagedTransactionFactory;
-import com.cyh.mymybatis.transaction.TransactionFactory;
+import com.cyh.mymybatis.ibatis.transaction.JDBCTransactionFactory;
+import com.cyh.mymybatis.ibatis.transaction.ManagedTransactionFactory;
+import com.cyh.mymybatis.ibatis.transaction.TransactionFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -38,10 +38,69 @@ public class Configuration {
     private LogType logType;
     //用于给不同的Dao接口注册代理类
     private MapperRegistry mapperRegistry;
+
+
     //用于储存sql操作语句
     private Map<String,MappedStatement> mappedStatements;
     //用户储存数据库环境
     Environment environment;
+
+    public Configuration() {
+        this.firstLevelCacheEnabled = true;
+        this.secondLevelCacheEnabled = false;
+        this.lazyLoadingEnabled = false;
+        this.multipleResultSetEnabled = false;
+        this.executorType = ExecutorType.Default;
+        this.timeout = 1000;
+        this.logType = LogType.Log4j;
+        this.mapperRegistry = new MapperRegistry();
+        this.mappedStatements = new HashMap<>();
+    }
+
+    public void setSecondLevelCacheEnabled(boolean secondLevelCacheEnabled) {
+        this.secondLevelCacheEnabled = secondLevelCacheEnabled;
+    }
+
+    public void setFirstLevelCacheEnabled(boolean firstLevelCacheEnabled) {
+        this.firstLevelCacheEnabled = firstLevelCacheEnabled;
+    }
+
+    public void setLazyLoadingEnabled(boolean lazyLoadingEnabled) {
+        this.lazyLoadingEnabled = lazyLoadingEnabled;
+    }
+
+    public void setMultipleResultSetEnabled(boolean multipleResultSetEnabled) {
+        this.multipleResultSetEnabled = multipleResultSetEnabled;
+    }
+
+    public void setExecutorType(ExecutorType executorType) {
+        this.executorType = executorType;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
+    }
+
+    public void setLogType(LogType logType) {
+        this.logType = logType;
+    }
+
+    public void setMapperRegistry(MapperRegistry mapperRegistry) {
+        this.mapperRegistry = mapperRegistry;
+    }
+
+    public Map<String, MappedStatement> getMappedStatements() {
+        return mappedStatements;
+    }
+
+    public void setMappedStatements(Map<String, MappedStatement> mappedStatements) {
+        this.mappedStatements = mappedStatements;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
 
     /**
      * 读取配置文件
@@ -135,7 +194,11 @@ public class Configuration {
         return transactionFactory;
     }
 
-
+    /**
+     * 解析配置文件中的dataSource节点
+     * @param environment environment节点
+     * @return
+     */
     public DataSource parseDataSource(Element environment) {
         DataSource dataSource;
         Element dateSourceElement = environment.element("dataSource");
@@ -165,5 +228,15 @@ public class Configuration {
         }
         return dataSource;
     }
+
+
+    /**
+     * 解析mapper节点
+     * 将所有的接口解析存入MapperRegistry中，形成一个接口类与代理类的映射。
+     * 代理类MapperProxyFactory中存在一个Method到MapperMethod的映射。
+     * 在getMapper时找不到Method到MapperMethod的映射时，就新加入一对映射。
+     * 将所有sql语句解析存入MapperStatement中。由于每个mapper.xml中有方法名的id，将接口.方法名作为键，MapperStatement作为值储存在configuration中。
+     */
+
 }
 

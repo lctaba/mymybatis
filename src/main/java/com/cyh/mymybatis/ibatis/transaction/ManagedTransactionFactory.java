@@ -1,4 +1,4 @@
-package com.cyh.mymybatis.transaction;
+package com.cyh.mymybatis.ibatis.transaction;
 
 /**
  * @Author cyh

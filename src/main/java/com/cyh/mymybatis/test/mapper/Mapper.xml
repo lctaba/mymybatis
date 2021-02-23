@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mapper namespace="com.cyh.mymybatis.test.TestDao">
+    <select id="findById">
+        <paramType value="int"/>
+        <paramType value="com/cyh/mymybatis/test/TestDo.java"/>
+        <resultType value="com/cyh/mymybatis/test/TestDo.java"/>
+        <sql value="select * from user where id = #{uid}"/>
+    </select>
+</mapper>

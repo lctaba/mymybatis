@@ -1,6 +1,6 @@
 package com.cyh.mymybatis.ibatis.sqlsession;
 
-import com.cyh.mymybatis.transaction.TransactionFactory;
+import com.cyh.mymybatis.ibatis.transaction.TransactionFactory;
 
 import javax.sql.DataSource;
 
