@@ -216,7 +216,9 @@ public class XmlParser {
 
         Element sqlCommand = sql.element("sql");
         String sqlString = sqlCommand.attributeValue("value");
-        ms.setSql(sqlString);
+        ms.setRawSql(sqlString);
+        DynamicSqlParser dynamicSqlParser= new DynamicSqlParser("#{","}");
+        dynamicSqlParser.parse(ms);
     }
 
     /**

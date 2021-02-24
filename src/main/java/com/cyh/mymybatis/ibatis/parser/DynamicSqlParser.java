@@ -1,5 +1,7 @@
 package com.cyh.mymybatis.ibatis.parser;
 
+import com.cyh.mymybatis.ibatis.mapper.MappedStatement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +19,13 @@ public class DynamicSqlParser {
         this.endToken = endToken;
     }
 
-    public String parse(String rawSql){
+    /**
+     * 解析原始动态sql，将其转为可执行sql
+     * @param ms 传入带有原始sql的MappedStatement，并将转换后的只执行sql存入
+     */
+    public void parse(MappedStatement ms){
         StringBuilder builder = new StringBuilder();
+        String rawSql = ms.getRawSql();
         List<String> paramName = new ArrayList<>();
         int offset = 0;
         int start = rawSql.indexOf(startToken);
@@ -46,7 +53,7 @@ public class DynamicSqlParser {
             start = rawSql.indexOf(startToken,offset);
         }
         builder.append(rawSql,offset,rawSql.length());
-        return builder.toString();
+        ms.setParamName(paramName);
     }
 }
 
