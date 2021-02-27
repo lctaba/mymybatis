@@ -1,10 +1,12 @@
 package com.cyh.mymybatis.ibatis.executor;
 
 import com.cyh.mymybatis.ibatis.cache.Cache;
+import com.cyh.mymybatis.ibatis.mapper.BoundSql;
 import com.cyh.mymybatis.ibatis.mapper.MappedStatement;
 import com.cyh.mymybatis.ibatis.sqlsession.Configuration;
 import com.cyh.mymybatis.ibatis.transaction.Transaction;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class DefaultExecutor implements Executor{
     }
 
     public <E> List<E> queryFromDatabase(MappedStatement mappedStatement, Object param){
+        BoundSql boundSql = mappedStatement.getBoundSql(param);
         return null;
     }
 }

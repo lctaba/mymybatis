@@ -104,7 +104,7 @@ public class XmlParser {
      */
     public TransactionFactory parseTransaction(Element environment) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         String transactionManager = environment.element("transactionManager").attributeValue("type");
-        TransactionFactory transactionFactory;
+        TransactionFactory transactionFactory = null;
         switch (transactionManager){
             case "JDBC":
                 transactionFactory = new JDBCTransactionFactory();
@@ -125,7 +125,7 @@ public class XmlParser {
      * @return
      */
     public DataSource parseDataSource(Element environment) {
-        DataSource dataSource;
+        DataSource dataSource = null;
         Element dateSourceElement = environment.element("dataSource");
         Map<String,String> propertiesMap = new HashMap<>();
         List<Element> properties = dateSourceElement.elements();
