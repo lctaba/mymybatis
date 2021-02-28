@@ -6,6 +6,7 @@ import com.cyh.mymybatis.ibatis.transaction.TransactionIsolationLevel;
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
@@ -65,7 +66,7 @@ public class UnpooledDataSource implements DataSource {
 
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return null;
+        throw new SQLException(this.getClass().getName() + " is not a wrapper.");
     }
 
     @Override
@@ -75,27 +76,27 @@ public class UnpooledDataSource implements DataSource {
 
     @Override
     public PrintWriter getLogWriter() throws SQLException {
-        return null;
+        return DriverManager.getLogWriter();
     }
 
     @Override
     public void setLogWriter(PrintWriter out) throws SQLException {
-
+        DriverManager.setLogWriter(out);
     }
 
     @Override
     public void setLoginTimeout(int seconds) throws SQLException {
-
+        DriverManager.setLoginTimeout(seconds);
     }
 
     @Override
     public int getLoginTimeout() throws SQLException {
-        return 0;
+        return DriverManager.getLoginTimeout();
     }
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return null;
+        return Logger.getLogger("global");
     }
 
     private Connection doGetConnection(String username, String pwd) throws SQLException {
@@ -117,8 +118,7 @@ public class UnpooledDataSource implements DataSource {
 
     private Connection doGetConnection(Properties properties) throws SQLException {
         this.initializeDriver();
-        Connection connection = DriverManager.getConnection(this.url,properties);
-        return connection;
+        return DriverManager.getConnection(this.url,properties);
     }
 
     private synchronized void initializeDriver(){
@@ -139,7 +139,15 @@ public class UnpooledDataSource implements DataSource {
         }
     }
 
+    static {
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
 
+        while(drivers.hasMoreElements()) {
+            Driver driver = (Driver)drivers.nextElement();
+            registeredDrivers.put(driver.getClass().getName(), driver);
+        }
+
+    }
 
     private static class DriverProxy implements Driver {
         private Driver driver;

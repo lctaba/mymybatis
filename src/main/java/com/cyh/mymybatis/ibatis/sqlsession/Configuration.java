@@ -3,11 +3,14 @@ package com.cyh.mymybatis.ibatis.sqlsession;
 import com.cyh.mymybatis.ibatis.Log.LogType;
 import com.cyh.mymybatis.ibatis.datasource.PooledDataSource;
 import com.cyh.mymybatis.ibatis.datasource.UnpooledDataSource;
+import com.cyh.mymybatis.ibatis.executor.DefaultExecutor;
+import com.cyh.mymybatis.ibatis.executor.Executor;
 import com.cyh.mymybatis.ibatis.executor.ExecutorType;
 import com.cyh.mymybatis.ibatis.mapper.MappedStatement;
 import com.cyh.mymybatis.ibatis.mapper.MapperRegistry;
 import com.cyh.mymybatis.ibatis.transaction.JDBCTransactionFactory;
 import com.cyh.mymybatis.ibatis.transaction.ManagedTransactionFactory;
+import com.cyh.mymybatis.ibatis.transaction.Transaction;
 import com.cyh.mymybatis.ibatis.transaction.TransactionFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -38,12 +41,10 @@ public class Configuration {
     private LogType logType;
     //用于给不同的Dao接口注册代理类
     private MapperRegistry mapperRegistry;
-
-
     //用于储存sql操作语句
     private Map<String,MappedStatement> mappedStatements;
     //用户储存数据库环境
-    Environment environment;
+    private Environment environment;
 
     public Configuration() {
         this.firstLevelCacheEnabled = true;
@@ -77,6 +78,8 @@ public class Configuration {
         this.executorType = executorType;
     }
 
+    public ExecutorType getExecutorType() { return executorType; }
+
     public void setTimeout(Integer timeout) {
         this.timeout = timeout;
     }
@@ -93,13 +96,43 @@ public class Configuration {
         return mappedStatements;
     }
 
-    public void setMappedStatements(Map<String, MappedStatement> mappedStatements) {
-        this.mappedStatements = mappedStatements;
-    }
+    public void setMappedStatements(Map<String, MappedStatement> mappedStatements) { this.mappedStatements = mappedStatements; }
 
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public Executor newExecutor(ExecutorType executorType, Transaction transaction){
+        Executor executor = null;
+        if(executorType == ExecutorType.Default){
+            executor = new DefaultExecutor(transaction,this);
+        }
+        if(this.secondLevelCacheEnabled){
+
+        }
+        return executor;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**

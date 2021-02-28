@@ -19,6 +19,11 @@ public class DefaultExecutor implements Executor{
     private Configuration configuration;
     private Cache cache;
 
+    public DefaultExecutor(Transaction transaction, Configuration configuration) {
+        this.transaction = transaction;
+        this.configuration = configuration;
+    }
+
     @Override
     public <E> List<E> query(MappedStatement mappedStatement, Object param) {
         List<E> resultSet = new ArrayList<E>();

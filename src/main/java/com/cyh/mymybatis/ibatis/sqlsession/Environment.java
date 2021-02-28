@@ -16,6 +16,30 @@ public class Environment {
     //事务管理工厂信息
     private TransactionFactory transactionFactory;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public TransactionFactory getTransactionFactory() {
+        return transactionFactory;
+    }
+
+    public void setTransactionFactory(TransactionFactory transactionFactory) {
+        this.transactionFactory = transactionFactory;
+    }
+
     public Environment(){}
 
     public Environment(Environment.Builder builder){
